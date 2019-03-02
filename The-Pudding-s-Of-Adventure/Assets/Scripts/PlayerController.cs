@@ -8,7 +8,16 @@ public class PlayerController : MonoBehaviour
 
     private Vector2 v2_Controller;
     private Rigidbody2D m_rigidbody;
+    private Vector2 v2_MousePosition
+    {
+        get
+        {
+            return Camera.main.ScreenToWorldPoint(new Vector3(Input.mousePosition.x , Input.mousePosition.y , 0f));
+        }
+    }
+    [SerializeField] private SpriteMask m_SprMask;
     [SerializeField] private LayerMask Layer_Floor;
+    public PhysicsMaterial2D p;
     private void OnEnable()
     {
         m_thePlayerData = Resources.Load<PlayerData>("Player");
@@ -16,6 +25,10 @@ public class PlayerController : MonoBehaviour
     private void Start()
     {
         m_rigidbody = this.GetComponent<Rigidbody2D>();
+    }
+    private void Update()
+    {
+        m_SprMask.transform.position = v2_MousePosition;
     }
     private void LateUpdate()
     {
@@ -26,7 +39,7 @@ public class PlayerController : MonoBehaviour
         }
         else
         {
-            m_rigidbody.velocity = new Vector2(0f , m_rigidbody.velocity.y);
+            m_rigidbody.velocity = new Vector2(0f, m_rigidbody.velocity.y);
         }
 
         if (Input.GetKeyDown(KeyCode.Space))            //跳躍
@@ -41,6 +54,16 @@ public class PlayerController : MonoBehaviour
     {
         Ray2D ray = new Ray2D(this.transform.position , Vector2.down);
         return Physics2D.Raycast(ray.origin, ray.direction , 0.85f , Layer_Floor);
+    }
+    private void OnCollisionEnter2D(Collision2D other)
+    {
+        if (other.collider.tag == "Bounce")
+        {
+            if (other.contacts[0].normal == Vector2.up)
+            {
+                m_rigidbody.velocity = new Vector2(m_rigidbody.velocity.x, 5f);
+            }
+        }
     }
 }
 [System.Serializable]

@@ -13,5 +13,5 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::PlayerData
   m_iMaxHp: 100
   m_iHp: 100
-  m_fMoveSpped: 10
-  m_fJumpHigh: 500
+  m_fMoveSpped: 3
+  m_fJumpHigh: 400
